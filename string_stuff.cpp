@@ -74,3 +74,82 @@ vector<string> get_words_from_line()
   }
   return var;
 }
+bool isSmaller(string str1, string str2){ 
+    int n1 = str1.length(), n2 = str2.length(); 
+    if (n1 < n2) 
+    return true; 
+    if (n2 < n1) 
+    return false; 
+    for (int i=0; i<n1; i++) 
+    if (str1[i] < str2[i]) 
+        return true; 
+    else if (str1[i] > str2[i]) 
+        return false; 
+    return false; 
+} 
+string findDiff(string str1, string str2){ 
+    if (isSmaller(str1, str2)) 
+        swap(str1, str2); 
+    string str = ""; 
+    int n1 = str1.length(), n2 = str2.length(); 
+    reverse(str1.begin(), str1.end()); 
+    reverse(str2.begin(), str2.end()); 
+    int carry = 0; 
+    for (int i=0; i<n2; i++) { 
+        int sub = ((str1[i]-'0')-(str2[i]-'0')-carry); 
+        if (sub < 0) { 
+            sub = sub + 10; 
+            carry = 1; 
+        } 
+        else
+            carry = 0; 
+        str.push_back(sub + '0'); 
+    } 
+    for (int i=n2; i<n1; i++){ 
+        int sub = ((str1[i]-'0') - carry); 
+        if (sub < 0) { 
+            sub = sub + 10; 
+            carry = 1; 
+        } 
+        else
+            carry = 0;         
+        str.push_back(sub + '0'); 
+    } 
+    reverse(str.begin(), str.end()); 
+    return str; 
+} 
+string modBigNumber(string num, ll m){ 
+    vi vec;
+    ll mod = 0; 
+    for (int i = 0; i < num.size(); i++){ 
+        int digit = num[i] - '0'; 
+        mod = mod * 10 + digit; 
+        int quo = mod / m; 
+        vec.push_back(quo);
+        mod = mod % m;         
+    } 
+    string tmp="";
+    bool zeroflag = 0; 
+    for (int i = 0; i < vec.size(); i++) { 
+        if (vec[i] == 0 && zeroflag == 0) 
+            continue; 
+        zeroflag = 1;
+        tmp+=itos(vec[i]);
+    }
+    if(tmp.length()==0)
+        tmp="0";
+    return tmp; 
+} 
+// take mod expo
+int mod_pow_s(int x, string p, int mod_v){
+    int v = 1;
+    while(1){
+        if(p=="0")
+            break;
+        int c=p.back()-'0';
+        if(c%2) v = x * v % mod_v;
+        x = x * x % mod_v;
+        p=modBigNumber(p, 2);
+    }
+    return v;
+}
